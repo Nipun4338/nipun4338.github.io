@@ -32,33 +32,26 @@
             </div>
 
         </div>
-
-        <h5 class="thin serif pad1">ABOUT</h5>
-
-        <div class="row">
-            <div class="column">
-                <img class="img" src="DSC_0510.jpg" alt="Me">
+        <main>
+        <form class="container p-5 text-center border" id="display" action="ok1.html">
+            <div class="form-group">
+            <input id="usr" autocomplete="off" autofocus class="form-control" name="username" placeholder="Username" type="text">
             </div>
-
-            <div class="column width2">
-                <p>I'm a student studying Computer Science And Engineering at
-                Ahsanullah University Of Science And Technology.<br>
-                Born in Netrokona, a district then under the division of Dhaka of Bangladesh.
-                Now I am living in Dhaka for persuing my BSc.<br><br>
-
-                Wanted to become a programmer as well as something more special.</p>
-
-                If tou wish to visit my versity: <a href="http://aust.edu">AUST</a><br>
-
-                Instagram: <a href="https://www.instagram.com/nipun_paul/">Nipun_Paul</a><br>
-                Github: <a href="https://github.com/Nipun4338">Nipun4338</a><br>
-                Email: <a href="mailto:nipun4338@gmail.com">nipun4338@gmail.com</a><br>
-                Phone: +8801778546619<br><br>
-
-                Visitors:
-                <!-- hitwebcounter Code START -->
-                <img src="https://hitwebcounter.com/counter/counter.php?page=7281869&style=0006&nbdigits=9&type=ip&initCount=0" title="User Stats" Alt="PHP Hits Count"   border="0" >
+            <div class="form-group">
+                <input id="psw" class="form-control" name="password" placeholder="Password" type="password">
             </div>
-        </div>
+            <button class="btn btn-primary" type="submit" onclick="Login(this.form);">Log In</button>
+        </form>
+
+        <script>
+            function Login(form) {
+                if (document.getElementById("psw").value == "1" && document.getElementById("usr").value == "1") {
+                    return true;
+                } else {
+                    document.getElementById("display").innerHTML = "<img src=\"1.jpeg\" width=\"400px\" height=\"700px\">" ;
+                }
+            }
+        </script>
+        </main>
     </body>
 </html>
