@@ -61,5 +61,22 @@
                 <img src="https://hitwebcounter.com/counter/counter.php?page=7281869&style=0006&nbdigits=9&type=ip&initCount=0" title="User Stats" Alt="PHP Hits Count"   border="0" >
             </div>
         </div>
+        
+        
+        <script>
+            window.onscroll = function() {myFunction()};
+
+            var header = document.getElementById("myHeader");
+            var sticky = header.offsetTop;
+
+            function myFunction() {
+              if (window.pageYOffset > sticky) {
+                header.classList.add("sticky");
+              } else {
+                header.classList.remove("sticky");
+              }
+            }
+          </script>
+        
     </body>
 </html>
