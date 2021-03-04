@@ -326,11 +326,14 @@ article {
   padding: 25px 0 50px;
 }
 .color{
-  border-left: 6px solid;
+  border-left: 3px solid #cecece;
   height: auto;
 }
 
 #full {
   border-left: 6px solid;
   height: auto;
+}
+#full1 {
+  
 }
