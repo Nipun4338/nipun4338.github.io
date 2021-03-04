@@ -314,13 +314,23 @@ nav {
 }
 
 .make-me-sticky {
-  background: #f1f1f1;
   position: -webkit-sticky;
 	position: sticky;
 	top: 0;
   padding: 0 15px;
+  border-left: 6px solid green;
+  height: auto;
 }
 article {
   border-radius: 12px;
   padding: 25px 0 50px;
+}
+.color{
+  border-left: 6px solid;
+  height: auto;
+}
+
+#full {
+  border-left: 6px solid;
+  height: auto;
 }
