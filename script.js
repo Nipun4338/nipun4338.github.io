@@ -1,172 +1,186 @@
-(function () {
-      var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame || function (callback) {
-              window.setTimeout(callback, 1000 / 60);
-          };
-      window.requestAnimationFrame = requestAnimationFrame;
-  })();
+/*jslint browser:true */
+$(document).ready(function () {
+	var $body = $('body');
+	var $navbar = $('.navbar-default');
+	var $offsetY = $navbar.offset().top + 10;
+	var $menuButton = $('button.navbar-toggle');
+	var $menuIcon = $('.navbar-toggle .glyphicon');
+	var $collapsedMenuItem = $('.navbar-collapse.collapse li');
+	var $modalBackdropDiv = $('<div class="modal-backdrop fade in"></div>');
+	var $scrollButton = $('.scroll');
+	var $socialIcon = $('.social');
 
-  // Terrain stuff.
-  var background = document.getElementById("bgCanvas"),
-      bgCtx = background.getContext("2d"),
-      width = window.innerWidth,
-      height = document.body.offsetHeight;
+	// Fixed Nav after scroll
+	function scroll() {
+		if ($(window).scrollTop() >= $offsetY) {
+			$navbar.addClass('menu-fixed').css('background-color', 'rgba(255,254,253,0.97)');
+		} else {
+			$navbar.removeClass('menu-fixed').css('background-color', 'transparent');
+		}
+	}
+	document.onscroll = scroll;
 
-  (height < 400) ? height = 400 : height;
+	// Mobile Menu functions
+	function openMenu() {
+		$menuIcon.removeClass('glyphicon-menu-hamburger').addClass('glyphicon-remove active');
+		$modalBackdropDiv.css('z-index', 900);
+		$body.append($modalBackdropDiv);
+		if (!$navbar.hasClass('menu-fixed')) {
+			$navbar.css('background-color', 'rgba(255,254,253,0.97)');
+		}
+		// Close menu after clicking modal-backdrop
+		$modalBackdropDiv.on('click', function () {
+			$('.navbar-toggle').click();
+			closeMenu();
+		});
+	}
+	function closeMenu() {
+		$menuIcon.removeClass('glyphicon-remove active').addClass('glyphicon-menu-hamburger');
+		$modalBackdropDiv.css('z-index', 1025).remove();
+		if (!$navbar.hasClass('menu-fixed')) {
+			$navbar.css('background-color', 'transparent');
+		}
+	}
+	// Mobile Menu Icon Toggle
+	$menuButton.on('click', function () {
+		if ($menuIcon.hasClass('glyphicon-menu-hamburger')) {
+			openMenu();
+			// Close menu after clicking a link
+			$collapsedMenuItem.on('click', function () {
+				$('.navbar-toggle').click(); // Trigger collapse animation
+				closeMenu();
+			});
+		} else {
+			closeMenu();
+		}
+	});
+	// Collapse menu on resize
+	$(window).resize(closeMenu());
 
-  background.width = width;
-  background.height = height;
+	// Smooth scroll to content
+	$scrollButton.on('click', function (e) {
+		e.preventDefault();
+		var $link = $(this).attr('href');
+		$('html, body').animate({
+			scrollTop: $($link).offset().top - 60
+		}, 900);
+	});
 
-  function Terrain(options) {
-      options = options || {};
-      this.terrain = document.createElement("canvas");
-      this.terCtx = this.terrain.getContext("2d");
-      this.scrollDelay = options.scrollDelay || 90;
-      this.lastScroll = new Date().getTime();
+	// Social icons hover effect
+	$socialIcon.on({
+		'focus mouseenter': function () {
+			var $iconImg = $(this).children();
+			var $href = $iconImg.attr('src').slice(0, -18) + 'color.png?raw=true'; // Remove 'black.svg' from end and add 'color.svg'
+			$iconImg.attr('src', $href);
+		},
+		'blur mouseleave': function () {
+			var $iconImg = $(this).children();
+			var $href = $iconImg.attr('src').slice(0, -18) + 'black.png?raw=true';
+			$iconImg.attr('src', $href);
+		}
+	});
 
-      this.terrain.width = width;
-      this.terrain.height = height;
-      this.fillStyle = options.fillStyle || "#191D4C";
-      this.mHeight = options.mHeight || height;
+	// Center modals vertically
+	function centerModal() {
+    $(this).css('display', 'block');
+    var $dialog = $(this).find('.modal-dialog');
+    var $offset = ($(window).height() - $dialog.height()) / 2;
+    var $bottomMargin = parseInt($dialog.css('margin-bottom'), 10);
 
-      // generate
-      this.points = [];
-
-      var displacement = options.displacement || 140,
-          power = Math.pow(2, Math.ceil(Math.log(width) / (Math.log(2))));
-
-      // set the start height and end height for the terrain
-      this.points[0] = this.mHeight;//(this.mHeight - (Math.random() * this.mHeight / 2)) - displacement;
-      this.points[power] = this.points[0];
-
-      // create the rest of the points
-      for (var i = 1; i < power; i *= 2) {
-          for (var j = (power / i) / 2; j < power; j += power / i) {
-              this.points[j] = ((this.points[j - (power / i) / 2] + this.points[j + (power / i) / 2]) / 2) + Math.floor(Math.random() * -displacement + displacement);
-          }
-          displacement *= 0.6;
-      }
-
-      document.body.appendChild(this.terrain);
+    // If modal is taller than screen height, top margin = bottom margin
+    if ($offset < $bottomMargin) {
+    	$offset = $bottomMargin;
+    }
+    $dialog.css('margin-top', $offset);
   }
 
-  Terrain.prototype.update = function () {
-      // draw the terrain
-      this.terCtx.clearRect(0, 0, width, height);
-      this.terCtx.fillStyle = this.fillStyle;
-      
-      if (new Date().getTime() > this.lastScroll + this.scrollDelay) {
-          this.lastScroll = new Date().getTime();
-          this.points.push(this.points.shift());
-      }
+  $(document).on('show.bs.modal', '.modal', centerModal);
+  $(window).on('resize', function () {
+    $('.modal:visible').each(centerModal);
+  });
+});
 
-      this.terCtx.beginPath();
-      for (var i = 0; i <= width; i++) {
-          if (i === 0) {
-              this.terCtx.moveTo(0, this.points[0]);
-          } else if (this.points[i] !== undefined) {
-              this.terCtx.lineTo(i, this.points[i]);
-          }
-      }
 
-      this.terCtx.lineTo(width, this.terrain.height);
-      this.terCtx.lineTo(0, this.terrain.height);
-      this.terCtx.lineTo(0, this.points[0]);
-      this.terCtx.fill();
+// DISCLAIMER: This function does require jQuery. I've used it here because the project I'm building this for already uses jQuery, so I thought why not. It can be modified quite simply to be done in raw JavaScript.  Just thought I'd let you know.
+
+
+
+
+// This is the funtion you need to copy
+// Copy from line 9 to 34
+
+function autoType(elementClass, typingSpeed){
+  var thhis = $(elementClass);
+  thhis.css({
+    "position": "relative",
+    "display": "inline-block"
+  });
+  thhis.prepend('<div class="cursor" style="right: initial; left:0;"></div>');
+  thhis = thhis.find(".text-js");
+  var text = thhis.text().trim().split('');
+  var amntOfChars = text.length;
+  var newString = "";
+  thhis.text("|");
+  setTimeout(function(){
+    thhis.css("opacity",1);
+    thhis.prev().removeAttr("style");
+    thhis.text("");
+    for(var i = 0; i < amntOfChars; i++){
+      (function(i,char){
+        setTimeout(function() {
+          newString += char;
+          thhis.text(newString);
+        },i*typingSpeed);
+      })(i+1,text[i]);
+    }
+  },1500);
+}
+
+$(document).ready(function(){
+  // Now to start autoTyping just call the autoType function with the
+  // class of outer div
+  // The second paramter is the speed between each letter is typed.
+  autoType(".type-js",200);
+});
+
+// set up text to print, each item in array is new line
+var aText = new Array(
+	"I'm a student studying Computer Science And Engineering at Ahsanullah University Of Science And Technology.",
+	"Born in Netrokona, a district then under the division of Dhaka of Bangladesh.",
+	"Now I am living in Dhaka for persuing my BSc.","",
+
+	"Wanted to become a programmer as well as something more special."
+);
+var iSpeed = 20; // time delay of print out
+var iIndex = 0; // start printing array at this position
+var iArrLength = aText[1].length; // the length of the text array
+var iScrollAt = 20; // start scrolling up at this many lines
+
+var iTextPos = 0; // initialise text position
+var sContents = ''; // initialise contents variable
+var iRow; // initialise current row
+
+function typewriter()
+{
+ sContents =  ' ';
+ iRow = Math.max(0, iIndex-iScrollAt);
+ var destination = document.getElementById("typedtext");
+
+ while ( iRow < iIndex ) {
+  sContents += aText[iRow++] + '<br />';
+ }
+ destination.innerHTML = sContents + aText[iIndex].substring(0, iTextPos) + "|";
+ if ( iTextPos++ == iArrLength ) {
+  iTextPos = 0;
+  iIndex++;
+  if ( iIndex != aText.length ) {
+   iArrLength = aText[iIndex].length;
+   setTimeout("typewriter()", 100);
   }
+ } else {
+  setTimeout("typewriter()", iSpeed);
+ }
+}
 
 
-  // Second canvas used for the stars
-  bgCtx.fillStyle = '#05004c';
-  bgCtx.fillRect(0, 0, width, height);
-
-  // stars
-  function Star(options) {
-      this.size = Math.random() * 2;
-      this.speed = Math.random() * .05;
-      this.x = options.x;
-      this.y = options.y;
-  }
-
-  Star.prototype.reset = function () {
-      this.size = Math.random() * 2;
-      this.speed = Math.random() * .05;
-      this.x = width;
-      this.y = Math.random() * height;
-  }
-
-  Star.prototype.update = function () {
-      this.x -= this.speed;
-      if (this.x < 0) {
-          this.reset();
-      } else {
-          bgCtx.fillRect(this.x, this.y, this.size, this.size);
-      }
-  }
-
-  function ShootingStar() {
-      this.reset();
-  }
-
-  ShootingStar.prototype.reset = function () {
-      this.x = Math.random() * width;
-      this.y = 0;
-      this.len = (Math.random() * 80) + 10;
-      this.speed = (Math.random() * 10) + 6;
-      this.size = (Math.random() * 1) + 0.1;
-      // this is used so the shooting stars arent constant
-      this.waitTime = new Date().getTime() + (Math.random() * 3000) + 500;
-      this.active = false;
-  }
-
-  ShootingStar.prototype.update = function () {
-      if (this.active) {
-          this.x -= this.speed;
-          this.y += this.speed;
-          if (this.x < 0 || this.y >= height) {
-              this.reset();
-          } else {
-              bgCtx.lineWidth = this.size;
-              bgCtx.beginPath();
-              bgCtx.moveTo(this.x, this.y);
-              bgCtx.lineTo(this.x + this.len, this.y - this.len);
-              bgCtx.stroke();
-          }
-      } else {
-          if (this.waitTime < new Date().getTime()) {
-              this.active = true;
-          }
-      }
-  }
-
-  var entities = [];
-
-  // init the stars
-  for (var i = 0; i < height; i++) {
-      entities.push(new Star({
-          x: Math.random() * width,
-          y: Math.random() * height
-      }));
-  }
-
-  // Add 2 shooting stars that just cycle.
-  entities.push(new ShootingStar());
-  entities.push(new ShootingStar());
-entities.push(new Terrain({mHeight : (height/2)-120}));
-entities.push(new Terrain({displacement : 120, scrollDelay : 50, fillStyle : "rgb(17,20,40)", mHeight : (height/2)-60}));
-  entities.push(new Terrain({displacement : 100, scrollDelay : 20, fillStyle : "rgb(10,10,5)", mHeight : height/2}));
-
-  //animate background
-  function animate() {
-      bgCtx.fillStyle = '#110E19';
-      bgCtx.fillRect(0, 0, width, height);
-      bgCtx.fillStyle = '#ffffff';
-      bgCtx.strokeStyle = '#ffffff';
-
-      var entLen = entities.length;
-
-      while (entLen--) {
-          entities[entLen].update();
-      }
-      requestAnimationFrame(animate);
-  }
-  animate();
+typewriter();
