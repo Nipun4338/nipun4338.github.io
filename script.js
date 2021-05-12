@@ -151,7 +151,7 @@ var aText = new Array(
 
 	"Wanted to become a programmer as well as something more special."
 );
-var iSpeed = 20; // time delay of print out
+var iSpeed = 50; // time delay of print out
 var iIndex = 0; // start printing array at this position
 var iArrLength = aText[1].length; // the length of the text array
 var iScrollAt = 20; // start scrolling up at this many lines
@@ -181,6 +181,5 @@ function typewriter()
   setTimeout("typewriter()", iSpeed);
  }
 }
-
 
 typewriter();
