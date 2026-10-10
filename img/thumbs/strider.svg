@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360" width="640" height="360">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0f2a2f"/><stop offset="1" stop-color="#14363b"/></linearGradient>
+    <linearGradient id="elev" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fc6b3f" stop-opacity=".55"/><stop offset="1" stop-color="#fc6b3f" stop-opacity="0"/></linearGradient>
+    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse"><path d="M32 0H0V32" fill="none" stroke="#ffffff" stroke-opacity=".05"/></pattern>
+  </defs>
+  <rect width="640" height="360" fill="url(#bg)"/>
+  <rect width="640" height="360" fill="url(#grid)"/>
+  <path d="M40 120 C120 60 170 160 240 110 S360 40 420 100 S520 190 600 120" fill="none" stroke="#2c5a60" stroke-width="18" stroke-linecap="round"/>
+  <path d="M70 250 C110 180 170 210 200 160 S260 90 320 130 S400 210 450 150 S540 70 590 110" fill="none" stroke="#fc6b3f" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M320 130 C350 150 380 190 400 196" fill="none" stroke="#ffd166" stroke-width="7" stroke-linecap="round" opacity=".9"/>
+  <circle cx="70" cy="250" r="9" fill="#2ec27e" stroke="#0f2a2f" stroke-width="3"/>
+  <circle cx="590" cy="110" r="9" fill="#ffffff" stroke="#fc6b3f" stroke-width="4"/>
+  <path d="M0 360 L0 318 L60 312 L110 300 L160 306 L210 284 L260 290 L310 268 L360 280 L410 262 L460 276 L510 254 L560 266 L640 250 L640 360 Z" fill="url(#elev)"/>
+  <path d="M0 318 L60 312 L110 300 L160 306 L210 284 L260 290 L310 268 L360 280 L410 262 L460 276 L510 254 L560 266 L640 250" fill="none" stroke="#fc6b3f" stroke-width="2"/>
+  <text x="32" y="56" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="30" font-weight="700" fill="#ffffff">Strider</text>
+  <text x="32" y="80" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="14" fill="#9fc2c6">GPS activity tracker · PostGIS segment matching</text>
+</svg>
