@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://nipun4338.github.io/sitemap.xml
